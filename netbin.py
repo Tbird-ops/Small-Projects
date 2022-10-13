@@ -51,7 +51,6 @@ def usable_ip():
     ## Determine max IP addr
     temp = list(to_bin(addr))
     for i in range(slant+(slant//8), 35):
-        print("i {}  temp[i] {}".format(i, temp[i]))
         if temp[i] != '.':
             temp[i] = "1"
     high = from_bin("".join(temp))
