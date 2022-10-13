@@ -42,14 +42,16 @@ def cidr(slant=0):
 # Show total and range of usable IPs
 def usable_ip():
     addr, slant = input("Enter address with slant: ").split("/")  ## ex 192.168.1.0/24
-    
+    slant = int(slant)
+
     ## Math behind total usable addr
     host_bits = 32 - int(slant) 
     usable = 2**host_bits - 2
 
     ## Determine max IP addr
     temp = list(to_bin(addr))
-    for i in range(int(slant)+3, 35):
+    for i in range(slant+(slant//8), 35):
+        print("i {}  temp[i] {}".format(i, temp[i]))
         if temp[i] != '.':
             temp[i] = "1"
     high = from_bin("".join(temp))
