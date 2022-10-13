@@ -49,7 +49,7 @@ def usable_ip():
 
     ## Determine max IP addr
     temp = list(to_bin(addr))
-    for i in range(int(slant)+1, 35):
+    for i in range(int(slant)+3, 35):
         if temp[i] != '.':
             temp[i] = "1"
     high = from_bin("".join(temp))
@@ -74,7 +74,7 @@ def main():
             case 2:                
                 ret = from_bin()    
             case 3:                
-                ret = cidr()    
+                ret = cidr()   
             case 4:                
                 ret = usable_ip()
             case 5:                
