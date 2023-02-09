@@ -4,7 +4,12 @@
 def ip_breaker(addr=0):
     if addr == 0:
         addr = input("Enter IP address: ")
-    return addr.split(".")  ## break up octets
+    if "." in addr:
+        return addr.split(".")  ## break up octets
+    elif " " in addr:
+        return addr.split(" ")
+    else:
+        return "Problem splitting. Unknown delimiter"
 
 # Build IP address from octets
 def ip_builder(octets):

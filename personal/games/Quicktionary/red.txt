@@ -1,0 +1,34 @@
+Contains the letters PL
+Begins with the letter A
+Cannot contain the letter R
+Contains the letter V
+Contains the letters CH
+Contains the letters OR
+Contains the letter C
+Cannot contain the letter M
+Contains the letters DE
+Begins with the letter T
+Contains the letters ST
+Begins with the letter S
+Contains the letters GS
+Contains the letters SH
+Contains the letter K
+Contains the letter Y
+Cannot contain the letter O
+Contains the letter B
+Cannot contain the letter L
+Ends with the letter E
+Cannot contain the letter P
+Ends with the letter N
+Cannot contain the letter S
+Ends with the letter R
+Begins with the letter F
+Contains the letter J
+Contains the letter NG
+Begins with the letter P
+Cannot contain the letter G
+Contains the letters MO
+Contains the letter H
+Contains the letter W
+Ends with the letter D
+Contains the letters NT

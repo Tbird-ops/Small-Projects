@@ -1,0 +1,34 @@
+Has an equal number of vowels and consonants
+Is at least seven letters long
+Is exactly seven letters long
+Has at least three different vowels
+Is exactly nine letters long
+Has exactly two syllables
+Does not contain two vowels next to each other
+Has exactly one syllable
+Is not two syllables
+Is exactly six letters long
+Does not contain a double letter
+Has at least two different vowels
+Does not have more than three different consonants
+Is a compound word
+Uses the same vowel twice
+Has exactly four syllables
+Has more consonants than vowels
+Has an odd number of letters
+Has a double consonant
+Has a silent letter
+Is exactly five letters long
+Has a double letter
+Does not use any letter more than once
+Is three or four letters long
+Has exactly three syllables
+Begins and ends with the same letter
+Is not a plural word
+Is not exactly six letters long
+Has an even number of letters
+Has two vowels next to each other
+Is at least ten letters long
+Is exactly eight letters long
+Does not contain more than one vowel
+Has exactly three vowels
