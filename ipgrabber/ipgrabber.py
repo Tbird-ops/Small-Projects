@@ -11,13 +11,13 @@ print(ip_address)
 print("Building request...")
 ### Pushing current IP to form
 # Form URL
-url = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfh_E8dP0uW0UxRNB3zillmLIXM0kOJS09kKehwjtMutoMQzQ/formResponse"
+url = "<GOOGLE FORM HERE OR OTHER WEB HOOK THING"
 # Data to fill
 form_data = {
-    'entry.1463770785':ip_address  # Push the ip address
+    '<BASED ON GOOGLE FORM ENTRY POINTS':ip_address  # Push the ip address
 }
 print("Request complete.\nSending...")
 user_agent = {
-    "referer":"https://docs.google.com/forms/d/e/1FAIpQLSfh_E8dP0uW0UxRNB3zillmLIXM0kOJS09kKehwjtMutoMQzQ/viewform?fbzx=1873801810042486645",
-    "user-agent":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
+    "referer":"<HEADER DATA>",
+    "user-agent":"<HEADER DATA"
 }
