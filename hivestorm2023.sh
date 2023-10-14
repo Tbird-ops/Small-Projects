@@ -64,13 +64,36 @@ fi
 # Point Repositories at Repo.ialab.dsu.edu
 # Then run a quick update so that later package installs go fast
 #########
+echo -e "${good}Correcting repositories based on system active system information."
+os_version=$(cat /etc/os-release | awk -F= '/VERSION_CODENAME=/{print $2}');
+os_id=$(cat /etc/os-release | awk -F= '/ID=/{print $2}');
 
+if [ "$os_version" == "ubuntu" ]; then
+    echo -e "${good}This is believed to be ubuntu. We are configuring the sources.list and moving source.list.d"
+    repos="/etc/apt/sources.list"
+    cp "$repos" "$repos.bak"
+    mv "$repos.d" "$repos.d.bak"
+    echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id main restricted universe multiverse" > $repos
+    echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-updates main restricted universe multiverse" >> $repos
+    echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-backports main restricted universe multiverse" >> $repos
+    echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-security main restricted universe multiverse" >> $repos
+
+    
+elif [ "$os_verison" == "fedora" ]; then
+    echo -e "${good}This is believed to be fedora. We are configuring the /etc/yum.repos.d/"
+    echo -e "${warn}Incomplete...."
+
+else 
+    echo -e "${error}Unexpected distribution. Script mishandle. DO REPO UPDATE BY HAND!!!!"
+fi
+    
 
 #########
 # Fix Users
 #########
 
 #!TODO audit Users, Admins, and Groups 
+echo -e "${good}Moving onto User Auditing
 
 #########
 # Fix Sudoers
