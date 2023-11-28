@@ -109,29 +109,42 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
     echo -e "${good}Correcting repositories based on system active system information."
     os_id=$(cat /etc/os-release | awk -F= '/^ID=/{print $2}');
 
+    #TODO Verify that all ubuntu test versions work with the repository change over!
+    # ialab currently supports back to 14.04...
     #* Ubuntu related repository format
     if [[ "$os_id" == "ubuntu" ]]; then
-        os_version=$(cat /etc/os-release | awk -F= '/VERSION_CODENAME=/{print $2}');
         echo -e "${good}This is believed to be ${green}UBUNTU${nocolor}. We are configuring the sources.list and moving source.list.d"
+        os_version=$(cat /etc/os-release | awk -F= '/VERSION_CODENAME=/{print $2}');
+        # make backups
         repos="/etc/apt/sources.list"
         cp "$repos" "$repos.bak"
         mv "$repos.d" "$repos.d.bak"
-        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id main restricted universe multiverse" > $repos
-        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-updates main restricted universe multiverse" >> $repos
-        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-backports main restricted universe multiverse" >> $repos
-        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-security main restricted universe multiverse" >> $repos
+        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_version main restricted universe multiverse" > $repos
+        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_version-updates main restricted universe multiverse" >> $repos
+        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_version-backports main restricted universe multiverse" >> $repos
+        echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_version-security main restricted universe multiverse" >> $repos
+
 
     #TODO Test that Debian format is working...
+    #* Debian Format
     elif [[ "$os_id" == "debian" ]]; then
         echo -e "${good}This is believed to be ${green}DEBIAN${nocolor}. Now configuring sources.list and backing up old .list and .list.d"
+        os_version=$(cat /etc/os-release | awk -F= '/VERSION_CODENAME=/{print $2}');
+        # make backups
         repos="/etc/apt/sources.list"
         cp "$repos" "$repos.bak"
         mv "$repos.d" "$repos.d.bak"
-        echo "deb http://repo.ialab.dsu.edu/debian/ $os_id main contrib non-free" > $repos
-        echo "deb http://repo.ialab.dsu.edu/debian/ $os_id-updates main contrib non-free" >> $repos
-        echo "deb http://repo.ialab.dsu.edu/debian/ $os_id-security main contrib non-free" >> $repos
+        if [[ "$os_version" == "bookworm" || "$os_version" == "bullseye" || "$os_version" == "buster"]]; then
+            echo "deb http://repo.ialab.dsu.edu/debian/ $os_version main contrib non-free" > $repos
+            echo "deb http://repo.ialab.dsu.edu/debian/ $os_version-updates main contrib non-free" >> $repos
+            echo "deb http://repo.ialab.dsu.edu/debian/ $os_version-security main contrib non-free" >> $repos
+        else
+            echo -e "${warn}This release is older than the 'oldoldstable' release. Defaulting to archive repositories"
+            echo "deb http://archive.debian.org/debian/ $os_version main contrib non-free" > $repos
+            echo "deb http://archive.debian.org/debian/ $os_version-updates main contrib non-free" >> $repos
+            echo "deb http://archive.debian.org/debian/ $os_version-security main contrib non-free" >> $repos
 
-    #TODO Figure out if dnf format is correct and functional. Run tests
+
     #* Fedora/RHEL format
     elif [[ "$os_id" == "fedora" ]]; then
         # Initialize variables
@@ -189,7 +202,7 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
 
     # Account for problematic distribution. Set error flag.
     else 
-        echo -e "${error}Unexpected distribution. Script mishandle. UPDATE BY HAND!!!!"
+        echo -e "${error}Unexpected distribution. Script mishandle. UPDATE MANUALLY!"
         repo_changed=1 
     fi
 
@@ -203,7 +216,7 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
         dnf check-update
         echo -e "${good}DONE!"
     else
-        echo -e "${error}Unable to identify package manager. Please update by hand!"
+        echo -e "${error}Unable to identify package manager. UPDATE MANUALLY!"
         repo_update=1
     fi
 
