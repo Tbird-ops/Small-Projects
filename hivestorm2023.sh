@@ -110,7 +110,7 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
     os_id=$(cat /etc/os-release | awk -F= '/ID=/{print $2}');
 
     #* Ubuntu related repository format
-    if [ "$os_id" = "ubuntu" ]; then
+    if [ "{$os_id}" = "ubuntu" ]; then
         os_version=$(cat /etc/os-release | awk -F= '/VERSION_CODENAME=/{print $2}');
         echo -e "${good}This is believed to be ${green}UBUNTU${nocolor}. We are configuring the sources.list and moving source.list.d"
         repos="/etc/apt/sources.list"
@@ -122,7 +122,7 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
         echo "deb http://repo.ialab.dsu.edu/ubuntu/ $os_id-security main restricted universe multiverse" >> $repos
 
     #TODO Test that Debian format is working...
-    elif [ "$os_id" = "debian" ]; then
+    elif [ "{$os_id}" = "debian" ]; then
         echo -e "${good}This is believed to be ${green}DEBIAN${nocolor}. Now configuring sources.list and backing up old .list and .list.d"
         repos="/etc/apt/sources.list"
         cp "$repos" "$repos.bak"
@@ -133,7 +133,7 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
 
     #TODO Figure out if dnf format is correct and functional. Run tests
     #* Fedora/RHEL format
-    elif [ "$os_id" = "fedora" ]; then
+    elif [ "{$os_id}" = "fedora" ]; then
         os_version=$(cat /etc/os-release | awk -F= '/VERSION_ID=/{print $2}');
         echo -e "${good}This is believed to be ${green}FEDORA${nocolor}. We are configuring the /etc/dnf/dnf.conf /etc/yum.repos.d/ and backing up old for restore point."
         repos="/etc/yum.repos.d"
@@ -174,13 +174,13 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
 
     # Attempt to refresh repository information
     if which apt > /dev/null; then
-        echo -n "${good}Using 'apt' to update repositories...."
+        echo "${good}Using 'apt' to update repositories...."
         apt-get update
-        echo "DONE!"
+        echo "${good}DONE!"
     elif which dnf > /dev/null; then
-        echo -n "${good}Using 'dnf' to update repositories...."
+        echo "${good}Using 'dnf' to update repositories...."
         dnf update
-        echo "DONE!"
+        echo "${good}DONE!"
     else
         echo "${error}Unable to identify package manager. Please update by hand!"
         repo_update=1
