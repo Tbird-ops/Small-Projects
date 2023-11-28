@@ -134,12 +134,13 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
     #TODO Figure out if dnf format is correct and functional. Run tests
     #* Fedora/RHEL format
     elif [[ "$os_id" == "fedora" ]]; then
+        # Initialize variables
         os_version=$(cat /etc/os-release | awk -F= '/VERSION_ID=/{print $2}');
-        echo -e "${good}This is believed to be ${green}FEDORA${nocolor}. We are configuring the /etc/dnf/dnf.conf /etc/yum.repos.d/ and backing up old for restore point."
         repos="/etc/yum.repos.d"
         dnfconf="/etc/dnf/dnf.conf"
         fedora="/etc/yum.repos.d/fedora.repo"
-        updates="etc/yum.repos.d/fedora-updates.repo"
+        updates="/etc/yum.repos.d/fedora-updates.repo"
+
         # Make backups. Moving repos directory to wipe potential bad
         mv "$repos" "$repos.bak"
         mkdir "$repos"
@@ -151,18 +152,38 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
         echo "installonly_limit=3" >> "$dnfconf"
         echo "clean_requirements_on_remove=true" >> "$dnfconf"
 
-        # now attempt to return to standard repositories!""
-        # fedora.repo file
-        echo "[fedora]" > "$fedora"
-        echo 'name=Fedora $releasever - $basearch' >> "$fedora"
-        echo 'baseurl=http://repo.ialab.dsu.edu/fedora/linux/releases/$releasever/Everything/$basearch/os/' >> "$fedora"
-        echo 'enabled=1' >> "$fedora"
+        echo -e "${warn}IAlab does not currently have repositories for fedora distributions older than 36. This will set to regular mirrors!"
+        if [ "$os_version" -gt 35 ]; then
+            echo -e "${good}This is believed to be ${green}FEDORA ${os_version}${nocolor}. We are configuring the /etc/dnf/dnf.conf /etc/yum.repos.d/ and backing up old for restore point."
+        
+            # now attempt to return to standard repositories!""
+            # fedora.repo file
+            echo "[fedora]" > "$fedora"
+            echo 'name=Fedora $releasever - $basearch' >> "$fedora"
+            echo 'baseurl=http://repo.ialab.dsu.edu/fedora/linux/releases/$releasever/Everything/$basearch/os/' >> "$fedora"
+            echo 'enabled=1' >> "$fedora"
 
-        # fedora-updates.repo file
-        echo "[updates]" > "$updates"
-        echo 'name=Fedora $releasever - $basearch - Updates' >> "$updates"
-        echo 'baseurl=http://repo.ialab.dsu.edu/fedora/linux/updates/$releasever/Everything/$basearch/' >> "$updates"
-        echo 'enabled=1' >> "$updates"
+            # fedora-updates.repo file
+            echo "[updates]" > "$updates"
+            echo 'name=Fedora $releasever - $basearch - Updates' >> "$updates"
+            echo 'baseurl=http://repo.ialab.dsu.edu/fedora/linux/updates/$releasever/Everything/$basearch/' >> "$updates"
+            echo 'enabled=1' >> "$updates"
+        else
+            echo -e "${warn}This is believed to be ${green}FEDORA ${yellow}${os_version}${nocolor}. Setting up archive repositories."
+
+            # now attempt to return to standard repositories!""
+            # fedora.repo file
+            echo "[fedora]" > "$fedora"
+            echo 'name=Fedora $releasever - $basearch' >> "$fedora"
+            echo 'baseurl=https://archives.fedoraproject.org/pub/archive/fedora/linux/releases/$releasever/Everything/$basearch/os/' >> "$fedora"
+            echo 'enabled=1' >> "$fedora"
+
+            # fedora-updates.repo file
+            echo "[updates]" > "$updates"
+            echo 'name=Fedora $releasever - $basearch - Updates' >> "$updates"
+            echo 'baseurl=https://archives.fedoraproject.org/pub/archive/fedora/linux/releases/$releasever/Everything/$basearch/os/' >> "$updates"
+            echo 'enabled=1' >> "$updates"
+        fi
 
     #TODO Write one for CentOS. Probably similar situation to Fedora
 
@@ -173,11 +194,11 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
     fi
 
     # Attempt to refresh repository information
-    if which apt > /dev/null; then
+    if which apt 2> /dev/null; then
         echo -e "${good}Using 'apt' to update repositories...."
         apt-get update
         echo -e "${good}DONE!"
-    elif which dnf > /dev/null; then
+    elif which dnf 2> /dev/null; then
         echo -e "${good}Using 'dnf' to update repositories...."
         dnf check-update
         echo -e "${good}DONE!"
