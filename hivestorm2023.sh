@@ -107,7 +107,7 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
 
     #* Notify user that repositories are being dynamically adjusted
     echo -e "${good}Correcting repositories based on system active system information."
-    os_id=$(cat /etc/os-release | awk -F= '/ID=/{print $2}');
+    os_id=$(cat /etc/os-release | awk -F= '/^ID=/{print $2}');
 
     #* Ubuntu related repository format
     if [ "{$os_id}" = "ubuntu" ]; then
@@ -174,15 +174,15 @@ if confirm "${prompt} Change repositories to DSU hosted collection?"; then
 
     # Attempt to refresh repository information
     if which apt > /dev/null; then
-        echo "${good}Using 'apt' to update repositories...."
+        echo -e "${good}Using 'apt' to update repositories...."
         apt-get update
-        echo "${good}DONE!"
+        echo -e "${good}DONE!"
     elif which dnf > /dev/null; then
-        echo "${good}Using 'dnf' to update repositories...."
-        dnf update
-        echo "${good}DONE!"
+        echo -e "${good}Using 'dnf' to update repositories...."
+        dnf check-update
+        echo -e "${good}DONE!"
     else
-        echo "${error}Unable to identify package manager. Please update by hand!"
+        echo -e "${error}Unable to identify package manager. Please update by hand!"
         repo_update=1
     fi
 
