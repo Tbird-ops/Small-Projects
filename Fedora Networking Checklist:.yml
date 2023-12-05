@@ -1,0 +1,34 @@
+Fedora Networking Checklist:
+Commands:
+    - ip 
+    - ifconfig
+    - nmcli
+
+NMCLI guide:
+Show current status:
+ - sudo nmcli general status
+
+See the active connections on your system:
+ - sudo nmcli con show -a
+
+See active and inactive interfaces:
+ - nmcli dev status
+
+Change IP to static IP:
+ - sudo nmcli connection modify {network_uuid from active connections} IPv4.address {static_IP}/{CIDR}
+ OR
+ - sudo nmcli connection modify {connection_name in single quotes} IPv4.address {static_IP}/{CIDR}
+
+Configure Default gateway:
+ - sudo nmcli connection modify {network_uuid or connection_name} IPv4.gateway {gateway_IP}
+
+Set Static DNS:
+ - sudo nmcli connection modify {network_uuid or conn_name} IPv4.dns {DNS_IP}
+
+AFTER CHANGES FLAP INTERFACE TO COMMIT!:
+ - sudo nmcli connection down {network_uuid or conn_name}
+ - sudo nmcli connection up {network_uuid or conn_name}
+
+Verify changes with ip command:
+ - ip addr
+ - ip route
