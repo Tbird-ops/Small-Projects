@@ -1,1 +1,43 @@
-/home/tristan/.local/bin/lc-swap
+#!/bin/bash
+
+#Script to mod/unmod lethal company
+# by Tbird
+
+# All original files were backed up to a hidden directory ".Lethal Company-".
+# Use rsync to move all files over and remove extraneous files
+
+if [ "$1" == "" ]; then
+	echo "Please supply an action: mod/unmod/check/profiles"
+    echo "INFO"
+    echo -e "\tmod: overwrite working configuration with generic mod folder structure"
+    echo -e "\tunmod: Guess xD"
+    echo -e "\tcheck: diff your current configuration with vanilla configuration."
+    echo -e "\t\tnote: no feedback means vanilla configuration"
+    echo -e "\tprofiles: list out mod profiles OR apply selected profile with 'profile .lc-<name>'\n"
+
+elif [ "$1" == "mod" ]; then
+    echo "Syncing modded over current configuration"
+	rsync -avP "/mnt/External/SteamLibrary/steamapps/common/.Lethal Company-mod/" "/mnt/External/SteamLibrary/steamapps/common/Lethal Company/"
+
+elif [ "$1" == "unmod" ]; then
+    echo "Syncing vanilla over current configuration"
+	rsync -avP --delete "/mnt/External/SteamLibrary/steamapps/common/.Lethal Company-/" "/mnt/External/SteamLibrary/steamapps/common/Lethal Company/"
+
+elif [ "$1" == "check" ]; then
+    echo "Checking current configuration against vanilla backup"
+    diff -qr "/mnt/External/SteamLibrary/steamapps/common/.Lethal Company-/" "/mnt/External/SteamLibrary/steamapps/common/Lethal Company"
+
+elif [ "$1" == "profile" ] && [ "$2" == "" ]; then
+    echo "Listing current mod profiles - to use, run 'lc-swap profile <profile>'"
+    ls -a "/mnt/External/SteamLibrary/steamapps/common/" | grep ".lc-"
+
+elif [ "$1" == "profile" ] && [ "$2" != "" ]; then
+    if [[ "$2" == ".lc-"* ]]; then
+        echo "Syncing dll files from profile to BepInEx/plugins/"
+        rsync -avP --delete  "/mnt/External/SteamLibrary/steamapps/common/$2/" "/mnt/External/SteamLibrary/steamapps/common/Lethal Company/BepInEx/plugins/"
+    else
+        echo "Incorrect profile provided. Please try again"
+    fi
+else
+	echo "Unknown action. Quiting"
+fi
